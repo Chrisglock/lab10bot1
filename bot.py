@@ -39,25 +39,25 @@ def quiz(update: Update, context: CallbackContext) -> None:
         
     
       questions = [
-                  ["push", "pull", "commit", "queso"],
-                   ["git track","git add","git push","git plus"]
-                   ,["git log","git status","git commits","git history"]
-                   ,["para verificar cambios","usar github","para pedir ayuda","para resolver errores"],
-                   ["git combine","git mix","git merge","git combine branch1 branch2"],
-                   ["git developers","git check","git editors","git blame"],
-                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
-                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
-                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
-                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
-                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
-                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
+                  ["push", "pull", "commit"],
+                   ["git track","git add","git push"]
+                   ,["git log","git status","git commits"]
+                   ,["verificar cambios antes de traerlos a tu repositorio","usar github","res"],
+                   ["git combine","git mix","git merge"],
+                   ["git developers","git check","git blame"],
+                  ["alternativa 1","alternativa 2","alternativa 3"],
+                  ["alternativa 1","alternativa 2","alternativa 3"],
+                  ["alternativa 1","alternativa 2","alternativa 3"],
+                  ["alternativa 1","alternativa 2","alternativa 3"],
+                  ["alternativa 1","alternativa 2","alternativa 3"],
+                  ["alternativa 1","alternativa 2","alternativa 3",]
                    ]
       enunciados = ["como mandas tu progreso a tus compañeros en git?",
                     "como trackeamos un nuevo archivo en el repositorio?",
                     "como comprobamos el registro de commits?",
                     "cual seria una ventaja de hacer un pull request sobre solo hacer pull en github?",
                     "como combinas los cambios hechos en dos branches distintas?",
-                    "como identificas los cambios hechos en el codigo?",
+                    "como identificas el autor de los cambios hechos en el codigo?",
                     "pregunta 7",
                     "pregunta 8",
                     "pregunta 9",
@@ -66,16 +66,16 @@ def quiz(update: Update, context: CallbackContext) -> None:
                     "pregunta 12",]
       
       numran=random.randint(0, len(pool)-1)
-      correctas = [0,1,0,0,2,3,0,0,0,0,0,0]
+      correctas = [0,1,0,0,2,2,1,1,1,1,1,1]
       nopregunta=pool[numran]
       
       question=questions[nopregunta]
       enunciado=enunciados[nopregunta]
       correcta=correctas[nopregunta]
-      numeros.remove(nopregunta)
+      pool.remove(nopregunta)
       message = update.effective_message.reply_poll(
-          enunciado, question, type=Poll.QUIZ, correct_option_id=correcta
-
+          enunciado, question, type=Poll.QUIZ, correct_option_id=[2,1,0],
+            is_anonymous=False
       )
       
       # Save some info about the poll the bot_data for later use in receive_quiz_answer
@@ -92,7 +92,7 @@ def receive_quiz_answer(update: Update, context: CallbackContext) -> None:
     # the bot can receive closed poll updates we don't care about
     if update.poll.is_closed:
         return
-    if update.poll.total_voter_count == 1:
+    if update.poll.total_voter_count == 3:
         try:
             quiz_data = context.bot_data[update.poll.id]
         # this means this poll answer update is from an old poll, we can't stop it then
