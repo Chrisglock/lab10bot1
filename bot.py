@@ -1,5 +1,5 @@
 import logging
-
+import random
 from telegram import (
     Poll,
     ParseMode,
@@ -34,32 +34,57 @@ def start(update: Update, context: CallbackContext) -> None:
 def quiz(update: Update, context: CallbackContext) -> None:
     """Send a predefined poll"""
     count=0
-    for i in range(0,5,1):
-      questions = [["push", "pull", "commit", "queso"],
+    pool=[0,1,2,3,4,5,6,7,8,9,10,11]
+    for i in range(0,6,1):
+        
+    
+      questions = [
+                  ["push", "pull", "commit", "queso"],
                    ["git track","git add","git push","git plus"]
                    ,["git log","git status","git commits","git history"]
                    ,["para verificar cambios","usar github","para pedir ayuda","para resolver errores"],
                    ["git combine","git mix","git merge","git combine branch1 branch2"],
-                   ["git developers","git check","git editors","git blame"]]
+                   ["git developers","git check","git editors","git blame"],
+                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
+                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
+                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
+                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
+                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
+                  ["alternativa 1","alternativa 2","alternativa 3","alternativa 4"],
+                   ]
       enunciados = ["como mandas tu progreso a tus compañeros en git?",
                     "como trackeamos un nuevo archivo en el repositorio?",
                     "como comprobamos el registro de commits?",
                     "cual seria una ventaja de hacer un pull request sobre solo hacer pull en github?",
                     "como combinas los cambios hechos en dos branches distintas?",
-                    "como identificas los cambios hechos en el codigo?"]
-      correctas = [0,1,0,0,2,3] 
-      question=questions[i]
-      enunciado=enunciados[i]
-      correcta=correctas[i]
+                    "como identificas los cambios hechos en el codigo?",
+                    "pregunta 7",
+                    "pregunta 8",
+                    "pregunta 9",
+                    "pregunta 10",
+                    "pregunta 11",
+                    "pregunta 12",]
+      
+      numran=random.randint(0, len(pool)-1)
+      correctas = [0,1,0,0,2,3,0,0,0,0,0,0]
+      nopregunta=pool[numran]
+      
+      question=questions[nopregunta]
+      enunciado=enunciados[nopregunta]
+      correcta=correctas[nopregunta]
+      numeros.remove(nopregunta)
       message = update.effective_message.reply_poll(
           enunciado, question, type=Poll.QUIZ, correct_option_id=correcta
 
       )
+      
       # Save some info about the poll the bot_data for later use in receive_quiz_answer
       payload = {
           message.poll.id: {"chat_id": update.effective_chat.id, "message_id": message.message_id}
       }
       context.bot_data.update(payload)
+      
+      
 
 
 def receive_quiz_answer(update: Update, context: CallbackContext) -> None:
