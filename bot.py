@@ -26,12 +26,6 @@ logger = logging.getLogger(__name__)
 
 
 def start(update: Update, context: CallbackContext) -> None:
-    """Inform user about what this bot can do"""
-    update.message.reply_text(
-        'usa /quiz para comenzar el quiz!'
-    )
-
-def quiz(update: Update, context: CallbackContext) -> None:
     """Send a predefined poll"""
     count=0
     pool=[0,1,2,3,4,5,6,7,8,9,10,11]
@@ -42,15 +36,15 @@ def quiz(update: Update, context: CallbackContext) -> None:
                   ["push", "pull", "commit"],
                    ["git track","git add","git push"]
                    ,["git log","git status","git commits"]
-                   ,["verificar cambios antes de traerlos a tu repositorio","usar github","res"],
+                   ,["verificar cambios antes de traerlos a tu repositorio","usar github","ninguna de las anteriores"],
                    ["git combine","git mix","git merge"],
                    ["git developers","git check","git blame"],
-                  ["alternativa 1","alternativa 2","alternativa 3"],
-                  ["alternativa 1","alternativa 2","alternativa 3"],
-                  ["alternativa 1","alternativa 2","alternativa 3"],
-                  ["alternativa 1","alternativa 2","alternativa 3"],
-                  ["alternativa 1","alternativa 2","alternativa 3"],
-                  ["alternativa 1","alternativa 2","alternativa 3",]
+                  ["lenguaje de programacion","sistema de control de versiones","una pagina web"],
+                  ["una version alterna del proyecto","un comando especial","una forma especial de commit"],
+                  ["git download","git clone","git copy local"],
+                  ["fetch y merge","cherrypick y combine","cherry-pick y merge"],
+                  ["todos los archivos de trackean","git hooks","archivos .txt"],
+                  ["desarrollo NO lineal entre ramas","desarrollo lineal entre ramas","ninguna de las anteriores",]
                    ]
       enunciados = ["como mandas tu progreso a tus compañeros en git?",
                     "como trackeamos un nuevo archivo en el repositorio?",
@@ -58,15 +52,15 @@ def quiz(update: Update, context: CallbackContext) -> None:
                     "cual seria una ventaja de hacer un pull request sobre solo hacer pull en github?",
                     "como combinas los cambios hechos en dos branches distintas?",
                     "como identificas el autor de los cambios hechos en el codigo?",
-                    "pregunta 7",
-                    "pregunta 8",
-                    "pregunta 9",
-                    "pregunta 10",
-                    "pregunta 11",
-                    "pregunta 12",]
+                    "que es git?",
+                    "en git un una rama o branch es?",
+                    "que comando sirva para traer a tu pc un repositorio en github?",
+                    "git pull es una combinacion de?",
+                    "que tipo de archivos no son trackeados por git?",
+                    "el merge de tipo fast-fordward se da en?",]
       
       numran=random.randint(0, len(pool)-1)
-      correctas = [0,1,0,0,2,2,1,1,1,1,1,1]
+      correctas = [0,1,0,0,2,2,1,0,1,0,1,1]
       nopregunta=pool[numran]
       
       question=questions[nopregunta]
@@ -74,7 +68,7 @@ def quiz(update: Update, context: CallbackContext) -> None:
       correcta=correctas[nopregunta]
       pool.remove(nopregunta)
       message = update.effective_message.reply_poll(
-          enunciado, question, type=Poll.QUIZ, correct_option_id=[2,1,0],
+          enunciado, question, type=Poll.QUIZ, correct_option_id=correcta,
             is_anonymous=False
       )
       
@@ -88,8 +82,11 @@ def quiz(update: Update, context: CallbackContext) -> None:
 
 
 def receive_quiz_answer(update: Update, context: CallbackContext) -> None:
-    """Close quiz after three participants took it"""
+    """el quiz de cierra despues de responder"""
     # the bot can receive closed poll updates we don't care about
+    #print("id del correcto: " + str(update.poll.correct_option_id))
+    #if update.poll.correct_option_id == option
+    print("update.poll.correct_option_id")
     if update.poll.is_closed:
         return
     if update.poll.total_voter_count == 3:
@@ -99,6 +96,7 @@ def receive_quiz_answer(update: Update, context: CallbackContext) -> None:
         except KeyError:
             return
         context.bot.stop_poll(quiz_data["chat_id"], quiz_data["message_id"])
+    
 
 
 def preview(update: Update, context: CallbackContext) -> None:
@@ -137,7 +135,6 @@ def main() -> None:
     updater = Updater("2126135673:AAEzEGBJJdRmOoiA7NzVzPnyQZwXntMhMuc")
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('quiz', quiz))
     dispatcher.add_handler(PollHandler(receive_quiz_answer))
     dispatcher.add_handler(CommandHandler('preview', preview))
     dispatcher.add_handler(MessageHandler(Filters.poll, receive_poll))
