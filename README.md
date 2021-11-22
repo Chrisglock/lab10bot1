@@ -1,2 +1,5 @@
-# lab10bot1
-este es el bot del laboratorio 10 que corresponde al bot1 para telegram en python.
+# lab10bots
+este es el repositorio para bots del laboratorio 10 para telegram en python.
+Editores:
+José García
+Christian Ramos
